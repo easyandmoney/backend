@@ -3,8 +3,7 @@ from uuid import uuid4
 
 app = Flask(__name__)
 
-storage = []
-
+storage = {}
 
 
 @app.route('/')
@@ -13,19 +12,32 @@ def hello():
 
 @app.get('/api/v1/operations/')
 def get_all():
-    return storage
+    return list(storage.values())
 
-@app.get('/api/v1/operations/')
-def get_by_id(uid):
-    return
+@app.get('/api/v1/operations/<string:uid>')
+def get_by_id(uid: str):
+    return storage[uid]
+
 
 @app.post('/api/v1/operations/')
 def add():
     uid = uuid4().hex
     operation = request.json
     operation['uid'] = uid
-    storage.append(operation)
+    storage[uid] = operation
     return operation, 201
+
+@app.put('/api/v1/operations/<string:uid>')
+def update(uid: str):
+    new_operation = request.json
+    new_operation['uid'] = uid
+    storage[uid] = new_operation
+    return storage[uid]
+
+@app.delete('/api/v1/operations/<string:uid>')
+def delete(uid: str):
+    storage.pop(uid)
+    return {}, 204
 
 
 def main():
