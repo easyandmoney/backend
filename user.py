@@ -4,7 +4,7 @@ from uuid import uuid4
 
 app = Flask(__name__)
 
-storage = []
+storage = {}
 
 @app.route('/')
 def hello():
@@ -12,7 +12,12 @@ def hello():
 
 @app.get('/api/v1/users/')
 def get_all():
-    return storage
+    #вернуть список значений
+    return list(storage.values())
+
+@app.get('/api/v1/users/<string:uid>')
+def get_by_id(uid: str):
+    return storage[uid]
 
 @app.post('/api/v1/users/')
 def add():
@@ -21,10 +26,23 @@ def add():
     user = request.json
     #добавляем новый ключ в словарь
     user["uid"] = uid
-    storage.append(user)
+    storage[uid] = user
     return user, 201
 
 
+
+
+@app.put('/api/v1/users/<string:uid>')
+def update(uid: str):
+    new_user = request.json
+    new_user['uid'] = uid
+    storage[uid] = new_user
+    return storage[uid]
+
+@app.delete('/api/v1/users/<string:uid>')
+def delete(uid: str):
+    storage.pop(uid)
+    return {}, 204
 
 def main():
     app.run()
