@@ -1,6 +1,6 @@
 from dataclasses import asdict
 from flask import Flask, request
-from operationsclass import OperationsStorage
+from easymoney.operationsclass import OperationsStorage
 
 
 app = Flask(__name__)
