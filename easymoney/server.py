@@ -1,11 +1,10 @@
-from flask import Flask, request
+from flask import request
 from uuid import uuid4
 from flask import Blueprint
 
 operations_view = Blueprint('operations', __name__)
 
 storage = {}
-
 
 @operations_view.get('/')
 def get_all():
@@ -35,12 +34,3 @@ def update(uid: str):
 def delete(uid: str):
     storage.pop(uid)
     return {}, 204
-
-
-def main():
-    app = Flask(__name__)
-    app.register_blueprint(operations_view, url_prefix='/api/v1/operations')
-    app.run()
-
-if __name__ == "__main__":
-    main()
