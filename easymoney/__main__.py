@@ -1,5 +1,5 @@
 from flask import Flask
-from easymoney.server import operations_view
+from easymoney.operations.view import operations_view
 
 def main():
     app = Flask(__name__)
