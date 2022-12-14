@@ -21,7 +21,6 @@ class OperationsStorage:
     def get_by_uid(self, uid):
         return self.storage[uid]
 
-
     def add(self, category, amount):
         uid = uuid4().hex
         new_operation = Operation(uid=uid, category=category, amount=amount)
@@ -39,4 +38,3 @@ class OperationsStorage:
     def delete(self, uid):
         del self.storage[uid]
         return {}, 204
-

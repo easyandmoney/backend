@@ -17,8 +17,6 @@ def get_all():
 def get_by_uid(uid: str):
     return asdict(operations_storage.get_by_uid(uid))
 
-
-
 @app.post('/api/v1/operations/')
 def add():
     operation = request.json
