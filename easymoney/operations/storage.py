@@ -1,40 +1,35 @@
-from dataclasses import dataclass
-from uuid import uuid4
-
-
-@dataclass
-class Operation:
-    uid: str
-    category: str
-    amount: int
-
+from easymoney.models import Operation
+from easymoney.db import db_session
 
 class OperationsStorage:
     def __init__(self):
         self.storage: dict[str, Operation] = {}
 
-
     def get_all(self):
-        return list(self.storage.values())
-
+        operations = Operation.query.all()
+        return operations
 
     def get_by_uid(self, uid):
-        return self.storage[uid]
+        operation = Operation.query.filter(Operation.id == uid).first()
+        return operation
 
     def add(self, category, amount):
-        uid = uuid4().hex
-        new_operation = Operation(uid=uid, category=category, amount=amount)
-        self.storage[new_operation.uid] = new_operation
-        return self.storage[new_operation.uid]
-
+        new_operation = Operation(name=category, amount=amount)
+        db_session.add(new_operation)
+        db_session.commit()
+        return new_operation
 
     def update(self, uid, category, amount):
-        update_operation = self.storage[uid]
-        update_operation.category = category
-        update_operation.amount = amount
-        return update_operation
+        operation = Operation.query.filter(Operation.id == uid).first()
+        operation.category = category
+        operation.amount = amount
+        db_session.commit()
+        return operation
 
-
-    def delete(self, uid):
-        del self.storage[uid]
-        return {}, 204
+    def delete(self, uid:int) -> bool:
+        operation = Operation.query.filter(Operation.id == uid).first()
+        if not operation:
+            return False
+        db_session.delete(operation)
+        db_session.commit()
+        return True
