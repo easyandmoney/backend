@@ -1,40 +1,37 @@
-from dataclasses import dataclass
-from uuid import uuid4
-
-
-@dataclass
-class User:
-    uid: str
-    name: str
-    email: str
-
+from easymoney.db import db_session
+from easymoney.models import User
 
 class UsersStorage:
     def __init__(self):
         self.storage: dict[str, User] = {}
 
-
     def get_all(self):
-        return list(self.storage.values())
-
+        users = User.query.all()
+        return users
 
     def get_by_uid(self, uid):
-        return self.storage[uid]
+        user = User.query.filter(User.uid == uid).first()
+        return user
 
     def add(self, name, email):
-        uid = uuid4().hex
-        new_user = User(uid=uid, name=name, email=email)
-        self.storage[new_user.uid] = new_user
-        return self.storage[new_user.uid]
+        new_user = User(name=name, email=email)
+        db_session.add(new_user)
+        db_session.commit()
+        return new_user
 
 
     def update(self, uid, name, email):
-        update_user = self.storage[uid]
-        update_user.name = name
-        update_user.email = email
-        return update_user
+        user = User.query.filter(User.uid == uid).first()
+        user.name = name
+        user.email = email
+        db_session.commit()
+        return user
 
 
-    def delete(self, uid):
-        del self.storage[uid]
-        return {}, 204
+    def delete(self, uid: int) -> bool:
+        user = User.query.filter(User.uid == uid).first()
+        if not user:
+            return False
+        db_session.delete(user)
+        db_session.commit()
+        return True
