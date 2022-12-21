@@ -12,7 +12,7 @@ class Operation(Base):
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
+    uid = Column(Integer, primary_key=True)
     name = Column(String)
     email = Column(String(120), unique=True)
 
