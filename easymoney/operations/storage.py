@@ -1,25 +1,21 @@
-from easymoney.models import Operation
 from easymoney.db import db_session
+from easymoney.models import Operation
+
 
 class OperationsStorage:
-    def __init__(self):
-        self.storage: dict[str, Operation] = {}
+    def get_all(self) -> list[Operation]:
+        return Operation.query.all()
 
-    def get_all(self):
-        operations = Operation.query.all()
-        return operations
+    def get_by_uid(self, uid: int) -> Operation:
+        return Operation.query.filter(Operation.uid == uid).first()
 
-    def get_by_uid(self, uid):
-        operation = Operation.query.filter(Operation.uid == uid).first()
-        return operation
-
-    def add(self, category, amount):
+    def add(self, category: str, amount: int) -> Operation:
         new_operation = Operation(name=category, amount=amount)
         db_session.add(new_operation)
         db_session.commit()
         return new_operation
 
-    def update(self, uid, category, amount):
+    def update(self, uid: int, category: str, amount: int) -> Operation:
         operation = Operation.query.filter(Operation.uid == uid).first()
         operation.category = category
         operation.amount = amount
