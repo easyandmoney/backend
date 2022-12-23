@@ -10,4 +10,12 @@ class Operation(BaseModel):
         orm_mode=True
 
 
+class User(BaseModel):
+    uid: int
+    name: str
+    email: str
+
+    class Config:
+        orm_mode=True
+
 
