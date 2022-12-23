@@ -22,7 +22,7 @@ def get_all():
     return all_users
 
 @users_view.get('/<string:uid>')
-def get_by_id(uid: str):
+def get_by_id(uid: int):
     entity = users_storage.get_by_uid(uid)
     user = User.from_orm(entity)
     return user.dict()
@@ -48,7 +48,7 @@ def add():
     return user.dict(), 201
 
 @users_view.put('/<string:uid>')
-def update(uid):
+def update(uid: int):
     payload = request.json
     if not payload:
         return {"message", "Empty payload"}, 400
@@ -67,7 +67,7 @@ def update(uid):
     return user.dict(), 201
 
 @users_view.delete('/<string:uid>')
-def delete(uid):
+def delete(uid: int):
     if not users_storage.delete(uid):
         return {}, 404
     return {}, 204
