@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-
 class Operation(BaseModel):
     uid: int
     name: str
@@ -17,5 +16,3 @@ class User(BaseModel):
 
     class Config:
         orm_mode=True
-
-
