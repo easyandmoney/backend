@@ -9,7 +9,7 @@ class Operation(Base):
     amount = Column(Integer)
     user_id = Column(Integer, ForeignKey("users.uid"), nullable=False)
 
-    user = relationship("User", back_populates="operation")
+    user = relationship("User", back_populates="operations")
 
     def __repr__(self):
         return f'<Operation {self.name} {self.amount}>'
@@ -22,7 +22,7 @@ class User(Base):
     name = Column(String)
     email = Column(String(120), unique=True)
 
-    operation = relationship("Operation", back_populates="user")
+    operations = relationship("Operation", back_populates="user")
 
     def __repr__(self):
         return f'<User {self.name} {self.email}>'
