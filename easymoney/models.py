@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from easymoney.db import Base, engine
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
+from easymoney.db import Base, engine
 
 
 class Operation(Base):
@@ -9,7 +10,6 @@ class Operation(Base):
     name = Column(String)
     amount = Column(Integer)
     user_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
-
     user = relationship('User', back_populates='operations')
 
     def __repr__(self):
@@ -20,8 +20,7 @@ class User(Base):
     __tablename__ = 'users'
     uid = Column(Integer, primary_key=True)
     name = Column(String)
-    email = Column(String(120), unique=True)
-
+    email = Column(String(120), unique=True)  # noqa: WPS432
     operations = relationship('Operation', back_populates='user')
 
     def __repr__(self):
