@@ -1,13 +1,13 @@
-from flask import request,Blueprint
+from flask import request, Blueprint
 from easymoney.user.storage import UsersStorage
 from easymoney.schemas import User
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 
 
-
 users_view = Blueprint('users', __name__)
 users_storage = UsersStorage()
+
 
 @users_view.get('/')
 def get_all():
@@ -21,11 +21,13 @@ def get_all():
         })
     return all_users
 
+
 @users_view.get('/<string:uid>')
 def get_by_id(uid: int):
     entity = users_storage.get_by_uid(uid)
     user = User.from_orm(entity)
     return user.dict()
+
 
 @users_view.post('/')
 def add():
@@ -41,11 +43,12 @@ def add():
 
     try:
         new_user = users_storage.add(name=user.name, email=user.email)
-    except IntegrityError as err:
-        return {'message': str(err)}, 409
+    except IntegrityError as error:
+        return {'message': str(error)}, 409
 
     user = User.from_orm(new_user)
     return user.dict(), 201
+
 
 @users_view.put('/<string:uid>')
 def update(uid: int):
@@ -59,17 +62,16 @@ def update(uid: int):
         return {'message': str(err)}, 400
 
     update_user = users_storage.update(
-            uid=uid,
-            name=user.name,
-            email=user.email
+        uid=uid,
+        name=user.name,
+        email=user.email
     )
     user = User.from_orm(update_user)
     return user.dict(), 201
+
 
 @users_view.delete('/<string:uid>')
 def delete(uid: int):
     if not users_storage.delete(uid):
         return {}, 404
     return {}, 204
-
-
