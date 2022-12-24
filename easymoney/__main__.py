@@ -1,6 +1,6 @@
 from flask import Flask
 
-from easymoney.operations.cloperations import user_operations_view
+from easymoney.operations.view import user_operations_view
 from easymoney.user.view import users_view
 
 
