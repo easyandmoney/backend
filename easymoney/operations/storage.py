@@ -6,17 +6,21 @@ class OperationsStorage:
     def get_all(self) -> list[Operation]:
         return Operation.query.all()
 
-    def get_by_uid(self, uid: int) -> Operation:
-        return Operation.query.filter(Operation.uid == uid).first()
+    def get_by_uid(self, user_id: int, uid: int) -> Operation:
+        query = Operation.query.filter(Operation.user_id == user_id)
+        query = query.filter(Operation.uid == uid)
+        return query.first()
 
-    def add(self, category: str, amount: int) -> Operation:
-        new_operation = Operation(name=category, amount=amount)
+    def add(self, category: str, amount: int, user_id: int) -> Operation:
+        new_operation = Operation(name=category, amount=amount, user_id=user_id)
         db_session.add(new_operation)
         db_session.commit()
         return new_operation
 
-    def update(self, uid: int, category: str, amount: int) -> Operation:
-        operation = Operation.query.filter(Operation.uid == uid).first()
+    def update(self, user_id: int, uid: int, category: str, amount: int) -> Operation:
+        query = Operation.query.filter(Operation.user_id == user_id)
+        query = query.filter(Operation.uid == uid)
+        operation = query.first()
         operation.category = category
         operation.amount = amount
         db_session.commit()
@@ -29,3 +33,6 @@ class OperationsStorage:
         db_session.delete(operation)
         db_session.commit()
         return True
+
+    def get_for_user(self, user_id: int) -> list[Operation]:
+        return Operation.query.filter(Operation.user_id == user_id)
