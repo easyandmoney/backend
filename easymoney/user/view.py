@@ -1,9 +1,9 @@
-from flask import request, Blueprint
-from easymoney.user.storage import UsersStorage
-from easymoney.schemas import User
+from flask import Blueprint, request
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 
+from easymoney.schemas import User
+from easymoney.user.storage import UsersStorage
 
 users_view = Blueprint('users', __name__)
 users_storage = UsersStorage()
@@ -15,9 +15,9 @@ def get_all():
     all_users = []
     for user in users:
         all_users.append({
-            "uid": user.uid,
-            "name": user.name,
-            "email": user.email
+            'uid': user.uid,
+            'name': user.name,
+            'email': user.email,
         })
     return all_users
 
@@ -33,10 +33,10 @@ def get_by_id(uid: int):
 def add():
     payload = request.json
     if not payload:
-        return {"message", "Empty payload"}, 400
+        return {'message', 'Empty payload'}, 400
 
     try:
-        payload["uid"] = -1
+        payload['uid'] = -1
         user = User(**payload)
     except ValidationError as err:
         return {'message': str(err)}, 400
@@ -54,9 +54,9 @@ def add():
 def update(uid: int):
     payload = request.json
     if not payload:
-        return {"message", "Empty payload"}, 400
+        return {'message': 'Empty payload'}, 400
     try:
-        payload["uid"] = -1
+        payload['uid'] = -1
         user = User(**payload)
     except ValidationError as err:
         return {'message': str(err)}, 400
@@ -64,7 +64,7 @@ def update(uid: int):
     update_user = users_storage.update(
         uid=uid,
         name=user.name,
-        email=user.email
+        email=user.email,
     )
     user = User.from_orm(update_user)
     return user.dict(), 201

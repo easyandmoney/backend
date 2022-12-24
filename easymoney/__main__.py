@@ -1,4 +1,5 @@
 from flask import Flask
+
 from easymoney.operations.view import operations_view
 from easymoney.user.view import users_view
 
@@ -10,5 +11,5 @@ def main():
     app.run()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

@@ -1,12 +1,13 @@
 from pydantic import BaseModel
 
+
 class Operation(BaseModel):
     uid: int
     name: str
     amount: int
 
     class Config:
-        orm_mode=True
+        orm_mode = True
 
 
 class User(BaseModel):
@@ -15,4 +16,4 @@ class User(BaseModel):
     email: str
 
     class Config:
-        orm_mode=True
+        orm_mode = True
