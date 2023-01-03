@@ -9,6 +9,7 @@ class Operation(Base):
     uid = Column(Integer, primary_key=True)
     name = Column(String)
     amount = Column(Integer)
+    type_income_expenses = Column(String)
     user_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
     user = relationship('User', back_populates='operations')
 

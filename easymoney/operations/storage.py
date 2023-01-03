@@ -11,18 +11,19 @@ class OperationsStorage:
         query = query.filter(Operation.uid == uid)
         return query.first()
 
-    def add(self, category: str, amount: int, user_id: int) -> Operation:
-        new_operation = Operation(name=category, amount=amount, user_id=user_id)
+    def add(self, category: str, amount: int, user_id: int, type_income_expenses: str) -> Operation:
+        new_operation = Operation(name=category, amount=amount, user_id=user_id, type_income_expenses=type_income_expenses)
         db_session.add(new_operation)
         db_session.commit()
         return new_operation
 
-    def update(self, user_id: int, uid: int, category: str, amount: int) -> Operation:
+    def update(self, user_id: int, uid: int, category: str, amount: int, type_income_expenses: str) -> Operation:
         query = Operation.query.filter(Operation.user_id == user_id)
         query = query.filter(Operation.uid == uid)
         operation = query.first()
         operation.category = category
         operation.amount = amount
+        operation.type_income_expenses = type_income_expenses
         db_session.commit()
         return operation
 
