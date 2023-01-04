@@ -30,6 +30,13 @@ def get_by_id(uid: int):
     return user.dict()
 
 
+@users_view.get('/telegram/<string:tg_id>')
+def get_by_tg_id(tg_id: str):
+    entity = users_storage.get_by_tg_id(tg_id)
+    user = User.from_orm(entity)
+    return user.dict()
+
+
 @users_view.post('/')
 def add():
     payload = request.json
@@ -43,7 +50,7 @@ def add():
         return {'message': str(err)}, 400
 
     try:
-        new_user = users_storage.add(name=user.name, email=user.email)
+        new_user = users_storage.add(name=user.name, email=user.email, tg_id=user.tg_id)
     except IntegrityError as error:
         return {'message': str(error)}, 409
 
