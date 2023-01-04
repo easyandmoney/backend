@@ -16,6 +16,7 @@ def get_all():
     for user in users:
         all_users.append({
             'uid': user.uid,
+            'tg_id': user.tg_id,
             'name': user.name,
             'email': user.email,
         })
@@ -63,6 +64,7 @@ def update(uid: int):
 
     update_user = users_storage.update(
         uid=uid,
+        tg_id=user.tg_id,
         name=user.name,
         email=user.email,
     )
