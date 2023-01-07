@@ -12,16 +12,20 @@ class UsersStorage:
     def get_by_uid(self, uid: int) -> User:
         return User.query.filter(User.uid == uid).first()
 
-    def add(self, name: str, email: str) -> User:
-        new_user = User(name=name, email=email)
+    def get_by_tg_id(self, tg_id: str) -> User:
+        return User.query.filter(User.tg_id == tg_id).first()
+
+    def add(self, name: str, email: str, tg_id: str) -> User:
+        new_user = User(name=name, email=email, tg_id=tg_id)
         db_session.add(new_user)
         db_session.commit()
         return new_user
 
-    def update(self, uid: int, name: str, email: str) -> User:
+    def update(self, uid: int, tg_id: str, name: str, email: str) -> User:
         user = User.query.filter(User.uid == uid).first()
         user.name = name
         user.email = email
+        user.tg_id = tg_id
         db_session.commit()
         return user
 
