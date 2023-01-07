@@ -16,6 +16,7 @@ def get_all():
     for user in users:
         all_users.append({
             'uid': user.uid,
+            'tg_id': user.tg_id,
             'name': user.name,
             'email': user.email,
         })
@@ -25,6 +26,13 @@ def get_all():
 @users_view.get('/<string:uid>')
 def get_by_id(uid: int):
     entity = users_storage.get_by_uid(uid)
+    user = User.from_orm(entity)
+    return user.dict()
+
+
+@users_view.get('/telegram/<string:tg_id>')
+def get_by_tg_id(tg_id: str):
+    entity = users_storage.get_by_tg_id(tg_id)
     user = User.from_orm(entity)
     return user.dict()
 
@@ -42,7 +50,7 @@ def add():
         return {'message': str(err)}, 400
 
     try:
-        new_user = users_storage.add(name=user.name, email=user.email)
+        new_user = users_storage.add(name=user.name, email=user.email, tg_id=user.tg_id)
     except IntegrityError as error:
         return {'message': str(error)}, 409
 
@@ -63,6 +71,7 @@ def update(uid: int):
 
     update_user = users_storage.update(
         uid=uid,
+        tg_id=user.tg_id,
         name=user.name,
         email=user.email,
     )

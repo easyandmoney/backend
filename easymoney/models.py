@@ -20,6 +20,7 @@ class Operation(Base):
 class User(Base):
     __tablename__ = 'users'
     uid = Column(Integer, primary_key=True)
+    tg_id = Column(String)
     name = Column(String)
     email = Column(String(120), unique=True)  # noqa: WPS432
     operations = relationship('Operation', back_populates='user')

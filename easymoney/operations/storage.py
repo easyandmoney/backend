@@ -1,4 +1,7 @@
+from sqlalchemy.exc import IntegrityError
+
 from easymoney.db import db_session
+from easymoney.errors import ConflictError, NotFoundError
 from easymoney.models import Operation
 
 
@@ -9,26 +12,44 @@ class OperationsStorage:
     def get_by_uid(self, user_id: int, uid: int) -> Operation:
         query = Operation.query.filter(Operation.user_id == user_id)
         query = query.filter(Operation.uid == uid)
+        if not query:
+            raise NotFoundError('operations', uid)
         return query.first()
 
     def add(self, category: str, amount: int, user_id: int, type_income_expenses: str) -> Operation:
         new_operation = Operation(name=category, amount=amount, user_id=user_id, type_income_expenses=type_income_expenses)
         db_session.add(new_operation)
-        db_session.commit()
+
+        try:
+            db_session.commit()
+        except IntegrityError:
+            raise ConflictError('operations', new_operation.uid)
+
         return new_operation
 
     def update(self, user_id: int, uid: int, category: str, amount: int, type_income_expenses: str) -> Operation:
         query = Operation.query.filter(Operation.user_id == user_id)
         query = query.filter(Operation.uid == uid)
         operation = query.first()
+
+        if not operation:
+            raise NotFoundError('operations', uid)
+
         operation.category = category
         operation.amount = amount
         operation.type_income_expenses = type_income_expenses
-        db_session.commit()
+       
+        try:
+            db_session.commit()
+        except IntegrityError:
+            raise ConflictError('operations', uid)
+
         return operation
 
-    def delete(self, uid: int) -> bool:
-        operation = Operation.query.filter(Operation.uid == uid).first()
+    def delete(self, user_id: int, uid: int) -> bool:
+        query = Operation.query.filter(Operation.user_id == user_id)
+        query = query.filter(Operation.uid == uid)
+        operation = query.first()
         if not operation:
             return False
         db_session.delete(operation)
