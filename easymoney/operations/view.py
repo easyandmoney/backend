@@ -27,8 +27,9 @@ def add(user_id: int):
         category=operation.name,
         amount=operation.amount,
         user_id=user_id,
+        type_income_expenses=operation.type_income_expenses,
     )
-
+        
     operation = Operation.from_orm(new_operation)
     return operation.dict(), 201
 
@@ -52,7 +53,7 @@ def update(user_id: int, uid: int):
         payload = request.json
     except BadRequestError as badrequest_err:
         return badrequest_err
-
+        
     if not payload:
         raise BadRequestError('Empty payload!')
 
@@ -64,6 +65,7 @@ def update(user_id: int, uid: int):
         uid=uid,
         category=operation.name,
         amount=operation.amount,
+        type_income_expenses=operation.type_income_expenses
     )
 
     operation = Operation.from_orm(update_operation)

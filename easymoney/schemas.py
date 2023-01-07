@@ -5,6 +5,7 @@ class Operation(BaseModel):
     uid: int
     name: str
     amount: int
+    type_income_expenses: str
 
     class Config:
         orm_mode = True
