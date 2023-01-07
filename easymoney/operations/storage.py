@@ -51,7 +51,7 @@ class OperationsStorage:
         query = query.filter(Operation.uid == uid)
         operation = query.first()
         if not operation:
-            return False
+            raise NotFoundError('operations', uid)
         db_session.delete(operation)
         db_session.commit()
         return True
