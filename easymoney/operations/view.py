@@ -1,5 +1,4 @@
 from flask import Blueprint, request
-from sqlalchemy.exc import IntegrityError
 
 from easymoney.errors import BadRequestError
 from easymoney.operations.storage import OperationsStorage
@@ -29,7 +28,7 @@ def add(user_id: int):
         user_id=user_id,
         type_income_expenses=operation.type_income_expenses,
     )
-        
+
     operation = Operation.from_orm(new_operation)
     return operation.dict(), 201
 
@@ -53,7 +52,7 @@ def update(user_id: int, uid: int):
         payload = request.json
     except BadRequestError as badrequest_err:
         return badrequest_err
-        
+
     if not payload:
         raise BadRequestError('Empty payload!')
 
@@ -65,7 +64,7 @@ def update(user_id: int, uid: int):
         uid=uid,
         category=operation.name,
         amount=operation.amount,
-        type_income_expenses=operation.type_income_expenses
+        type_income_expenses=operation.type_income_expenses,
     )
 
     operation = Operation.from_orm(update_operation)

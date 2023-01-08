@@ -14,7 +14,7 @@ class Operation(BaseModel):
 class User(BaseModel):
     uid: int
     name: str
-    email: str
+    email: str | None
     tg_id: str
 
     class Config:

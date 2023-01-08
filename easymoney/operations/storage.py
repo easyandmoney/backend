@@ -11,13 +11,24 @@ class OperationsStorage:
 
     def get_by_uid(self, user_id: int, uid: int) -> Operation:
         query = Operation.query.filter(Operation.user_id == user_id)
-        query = query.filter(Operation.uid == uid)
+        query = query.filter(Operation.uid == uid).first()
         if not query:
             raise NotFoundError('operations', uid)
-        return query.first()
+        return query
 
-    def add(self, category: str, amount: int, user_id: int, type_income_expenses: str) -> Operation:
-        new_operation = Operation(name=category, amount=amount, user_id=user_id, type_income_expenses=type_income_expenses)
+    def add(
+        self,
+        category: str,
+        amount: int,
+        user_id: int,
+        type_income_expenses: str,
+    ) -> Operation:
+        new_operation = Operation(
+            name=category,
+            amount=amount,
+            user_id=user_id,
+            type_income_expenses=type_income_expenses,
+        )
         db_session.add(new_operation)
 
         try:
@@ -27,7 +38,14 @@ class OperationsStorage:
 
         return new_operation
 
-    def update(self, user_id: int, uid: int, category: str, amount: int, type_income_expenses: str) -> Operation:
+    def update(
+        self,
+        user_id: int,
+        uid: int,
+        category: str,
+        amount: int,
+        type_income_expenses: str,
+    ) -> Operation:
         query = Operation.query.filter(Operation.user_id == user_id)
         query = query.filter(Operation.uid == uid)
         operation = query.first()
@@ -38,7 +56,7 @@ class OperationsStorage:
         operation.category = category
         operation.amount = amount
         operation.type_income_expenses = type_income_expenses
-       
+
         try:
             db_session.commit()
         except IntegrityError:

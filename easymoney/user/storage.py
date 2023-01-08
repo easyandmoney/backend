@@ -1,4 +1,5 @@
 from easymoney.db import db_session
+from easymoney.errors import NotFoundError
 from easymoney.models import User
 
 
@@ -13,7 +14,10 @@ class UsersStorage:
         return User.query.filter(User.uid == uid).first()
 
     def get_by_tg_id(self, tg_id: str) -> User:
-        return User.query.filter(User.tg_id == tg_id).first()
+        user = User.query.filter(User.tg_id == tg_id).first()
+        if not user:
+            raise NotFoundError('user.tg_id', tg_id)
+        return user
 
     def add(self, name: str, email: str, tg_id: str) -> User:
         new_user = User(name=name, email=email, tg_id=tg_id)
