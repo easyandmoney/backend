@@ -10,7 +10,7 @@ class Operation(Base):
     name = Column(String)
     amount = Column(Integer)
     type_income_expenses = Column(String)
-    date = Column(Date)
+    day = Column(Date)
     user_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
     user = relationship('User', back_populates='operations')
 

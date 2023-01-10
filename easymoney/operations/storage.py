@@ -1,4 +1,5 @@
 from sqlalchemy.exc import IntegrityError
+from datetime import date
 
 from easymoney.db import db_session
 from easymoney.errors import ConflictError, NotFoundError
@@ -8,6 +9,11 @@ from easymoney.models import Operation
 class OperationsStorage:
     def get_all(self) -> list[Operation]:
         return Operation.query.all()
+
+    def get_by_date(self, user_id: int, day: date) -> list[Operation]:
+        query = Operation.query.filter(Operation.user_id == user_id)
+        query = query.filter(Operation.day == date).all()
+        return query
 
     def get_by_uid(self, user_id: int, uid: int) -> Operation:
         query = Operation.query.filter(Operation.user_id == user_id)

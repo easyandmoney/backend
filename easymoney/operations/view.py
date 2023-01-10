@@ -3,6 +3,7 @@ from flask import Blueprint, request
 from easymoney.errors import BadRequestError
 from easymoney.operations.storage import OperationsStorage
 from easymoney.schemas import Operation
+from datetime import date
 
 user_operations_view = Blueprint('user_operations', __name__)
 
@@ -42,6 +43,13 @@ def get_all(user_id: int):
 @user_operations_view.get('/<int:uid>')
 def get_by_uid(user_id: int, uid: int):
     entity = storage.get_by_uid(user_id=user_id, uid=uid)
+    operation = Operation.from_orm(entity)
+    return operation.dict()
+
+
+@user_operations_view.get('/<date:day>')
+def get_by_date(user_id: int, day: date):
+    entity = storage.get_by_date(user_id=user_id, day=day)
     operation = Operation.from_orm(entity)
     return operation.dict()
 
