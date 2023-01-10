@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship
 
 from easymoney.db import Base, engine
@@ -10,6 +10,7 @@ class Operation(Base):
     name = Column(String)
     amount = Column(Integer)
     type_income_expenses = Column(String)
+    date = Column(Date)
     user_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
     user = relationship('User', back_populates='operations')
 
