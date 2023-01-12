@@ -1,4 +1,5 @@
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
 from easymoney.db import db_session
 from easymoney.errors import ConflictError, NotFoundError
@@ -9,12 +10,16 @@ class OperationsStorage:
     def get_all(self) -> list[Operation]:
         return Operation.query.all()
 
+    def get_by_date(self, user_id: int, payment_date: datetime) -> list[Operation]:
+        query = Operation.query.filter(Operation.user_id == user_id)
+        return query.filter(Operation.payment_date > payment_date).all()
+
     def get_by_uid(self, user_id: int, uid: int) -> Operation:
         query = Operation.query.filter(Operation.user_id == user_id)
-        query = query.filter(Operation.uid == uid).first()
-        if not query:
+        operation = query.filter(Operation.uid == uid).first()
+        if not operation:
             raise NotFoundError('operations', uid)
-        return query
+        return operation
 
     def add(
         self,
@@ -22,12 +27,14 @@ class OperationsStorage:
         amount: int,
         user_id: int,
         type_income_expenses: str,
+        payment_date: datetime
     ) -> Operation:
         new_operation = Operation(
             name=category,
             amount=amount,
             user_id=user_id,
             type_income_expenses=type_income_expenses,
+            payment_date=payment_date,
         )
         db_session.add(new_operation)
 
@@ -45,6 +52,7 @@ class OperationsStorage:
         category: str,
         amount: int,
         type_income_expenses: str,
+        payment_date: datetime,
     ) -> Operation:
         query = Operation.query.filter(Operation.user_id == user_id)
         query = query.filter(Operation.uid == uid)
@@ -56,6 +64,7 @@ class OperationsStorage:
         operation.category = category
         operation.amount = amount
         operation.type_income_expenses = type_income_expenses
+        operation.payment_date = payment_date
 
         try:
             db_session.commit()
