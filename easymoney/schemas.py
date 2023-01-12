@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 
 from pydantic import BaseModel
 
@@ -7,7 +7,7 @@ class Operation(BaseModel):
     uid: int
     name: str
     amount: int
-    day: date
+    payment_date: datetime
     type_income_expenses: str
 
     class Config:
