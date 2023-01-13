@@ -83,7 +83,7 @@ def update(user_id: int, uid: int):
     )
 
     operation = Operation.from_orm(update_operation)
-    return operation.dict(), 200
+    return operation.json(), 200
 
 
 @user_operations_view.delete('/<int:uid>')
