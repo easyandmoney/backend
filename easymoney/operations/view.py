@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 
+import orjson
 from flask import Blueprint, request
 
 from easymoney.errors import BadRequestError
@@ -41,7 +42,7 @@ def add(user_id: int):
 @user_operations_view.get('/')
 def get_all(user_id: int):
     user_operations = storage.get_for_user(user_id)
-    return [Operation.from_orm(operation).json() for operation in user_operations]
+    return orjson.dumps([Operation.from_orm(operation).dict() for operation in user_operations])
 
 
 @user_operations_view.get('/<int:uid>')
@@ -56,7 +57,7 @@ def get_today_operations(user_id: int):
     payment_date = datetime.today() - timedelta(hours=24)
 
     entities = storage.get_by_date(user_id=user_id, payment_date=payment_date)
-    return [Operation.from_orm(operation).json() for operation in entities]
+    return orjson.dumps([Operation.from_orm(operation).dict() for operation in entities])
 
 
 @user_operations_view.put('/<int:uid>')
