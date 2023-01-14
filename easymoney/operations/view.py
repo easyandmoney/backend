@@ -1,11 +1,11 @@
-from flask import Blueprint, request
 import logging
+from datetime import datetime, timedelta
+
+from flask import Blueprint, request
 
 from easymoney.errors import BadRequestError
 from easymoney.operations.storage import OperationsStorage
 from easymoney.schemas import Operation
-from datetime import datetime, timedelta
-
 
 logger = logging.getLogger(__name__)
 user_operations_view = Blueprint('user_operations', __name__)
@@ -56,8 +56,7 @@ def get_today_operations(user_id: int):
     payment_date = datetime.today() - timedelta(hours=24)
 
     entities = storage.get_by_date(user_id=user_id, payment_date=payment_date)
-    operations = [Operation.from_orm(operation).json() for operation in entities]
-    return operations
+    return [Operation.from_orm(operation).json() for operation in entities]
 
 
 @user_operations_view.put('/<int:uid>')

@@ -1,5 +1,6 @@
-from sqlalchemy.exc import IntegrityError
 from datetime import datetime
+
+from sqlalchemy.exc import IntegrityError
 
 from easymoney.db import db_session
 from easymoney.errors import ConflictError, NotFoundError
@@ -27,7 +28,7 @@ class OperationsStorage:
         amount: int,
         user_id: int,
         type_income_expenses: str,
-        payment_date: datetime
+        payment_date: datetime,
     ) -> Operation:
         new_operation = Operation(
             name=category,
