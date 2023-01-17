@@ -1,7 +1,7 @@
 import logging
+import orjson
 from datetime import datetime, timedelta
 
-import orjson
 from flask import Blueprint, request
 
 from easymoney.errors import BadRequestError
@@ -58,6 +58,12 @@ def get_today_operations(user_id: int):
 
     entities = storage.get_by_date(user_id=user_id, payment_date=payment_date)
     return orjson.dumps([Operation.from_orm(operation).dict() for operation in entities])
+
+
+@user_operations_view.get('/total')
+def get_sum(user_id: int):
+    total = storage.get_operations_sum(user_id=user_id)
+    return {'total': total}
 
 
 @user_operations_view.put('/<int:uid>')

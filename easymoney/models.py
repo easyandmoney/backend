@@ -1,7 +1,6 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
-from sqlalchemy.sql import func
-
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from easymoney.db import Base, engine
 
@@ -15,6 +14,7 @@ class Operation(Base):
     payment_date = Column(DateTime(timezone=True), default=func.now())
     user_id = Column(Integer, ForeignKey('users.uid'), nullable=False)
     user = relationship('User', back_populates='operations')
+    category = Column(String)
 
     def __repr__(self):
         return f'<Operation {self.name} {self.amount}>'
