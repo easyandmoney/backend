@@ -60,6 +60,22 @@ def get_today_operations(user_id: int):
     return orjson.dumps([Operation.from_orm(operation).dict() for operation in entities])
 
 
+@user_operations_view.get('/month')
+def get_month_operations(user_id: int):
+    payment_date = datetime.today() - timedelta(days=30)
+
+    entities = storage.get_by_date(user_id=user_id, payment_date=payment_date)
+    return orjson.dumps([Operation.from_orm(operation).dict() for operation in entities])
+
+
+@user_operations_view.get('/year')
+def get_year_operations(user_id: int):
+    payment_date = datetime.today() - timedelta(days=365)
+
+    entities = storage.get_by_date(user_id=user_id, payment_date=payment_date)
+    return orjson.dumps([Operation.from_orm(operation).dict() for operation in entities])
+
+
 @user_operations_view.put('/<int:uid>')
 def update(user_id: int, uid: int):
     try:
