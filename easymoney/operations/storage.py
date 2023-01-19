@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
 from easymoney.db import db_session
@@ -21,6 +22,10 @@ class OperationsStorage:
         if not operation:
             raise NotFoundError('operations', uid)
         return operation
+
+    def get_operations_sum(self, user_id: int) -> int:
+        operation = db_session.query(func.sum(Operation.amount))
+        return operation.filter(Operation.user_id == user_id).scalar()
 
     def add(
         self,

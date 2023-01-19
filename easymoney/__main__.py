@@ -32,7 +32,7 @@ def main():
 
     app.teardown_appcontext(shutdown_session)
 
-    app.run()
+    app.run(host='0.0.0.0', port=5000)  # noqa: WPS432
 
 
 def shutdown_session(exception=None):

@@ -9,6 +9,7 @@ class Operation(BaseModel):
     amount: int
     payment_date: datetime
     type_income_expenses: str
+    category: str | None
 
     class Config:
         orm_mode = True
