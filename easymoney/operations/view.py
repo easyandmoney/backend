@@ -52,7 +52,7 @@ def get_by_uid(user_id: int, uid: int):
     return operation.dict()
 
 
-@user_operations_view.delete('/delete-last')
+@user_operations_view.delete('/last')
 def delete_last_operation(user_id: int):
     storage.delete_last_operation(user_id=user_id)
     return {}, 404
