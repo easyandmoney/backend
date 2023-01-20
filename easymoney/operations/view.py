@@ -28,11 +28,12 @@ def add(user_id: int):
     operation = Operation(**payload)
 
     new_operation = storage.add(
-        category=operation.name,
+        name=operation.name,
         amount=operation.amount,
         user_id=user_id,
         type_income_expenses=operation.type_income_expenses,
         payment_date=operation.payment_date,
+        category=operation.category,
     )
 
     operation = Operation.from_orm(new_operation)
@@ -64,6 +65,12 @@ def get_today_operations(user_id: int):
 def get_sum(user_id: int):
     total = storage.get_operations_sum(user_id=user_id)
     return {'total': total}
+
+
+@user_operations_view.get('/<category>')
+def get_by_cat(user_id: int, category: str):
+    totalcat = storage.get_by_category(user_id=user_id, category=category)
+    return {'category': totalcat}
 
 
 @user_operations_view.put('/<int:uid>')
