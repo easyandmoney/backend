@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import func
+from sqlalchemy import func, desc
 from sqlalchemy.exc import IntegrityError
 
 from easymoney.db import db_session
@@ -85,6 +85,13 @@ class OperationsStorage:
         operation = query.first()
         if not operation:
             raise NotFoundError('operations', uid)
+        db_session.delete(operation)
+        db_session.commit()
+        return True
+
+    def delete_last_operation(self, user_id: int) -> bool:
+        query = Operation.query.filter(Operation.user_id == user_id)
+        operation = query.order_by(desc(Operation.uid)).first()
         db_session.delete(operation)
         db_session.commit()
         return True
