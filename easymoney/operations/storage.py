@@ -23,16 +23,25 @@ class OperationsStorage:
             raise NotFoundError('operations', uid)
         return operation
 
-    def get_operations_sum(self, user_id: int) -> int:
-        operation = db_session.query(func.sum(Operation.amount))
-        return operation.filter(Operation.user_id == user_id).scalar()
+    def get_total(self, user_id: int, payment_date: datetime | None) -> int:
+        query = db_session.query(func.sum(Operation.amount))
+        query = query.filter(Operation.user_id == user_id)
+        if payment_date:
+            query = query.filter(Operation.payment_date > payment_date)
+        return query.scalar()
 
-    def get_by_category(self, user_id: int, category: str) -> int:
-        query = db_session.query(
-            Operation.category, func.sum(Operation.amount),
-        )
+    def get_total_per_cat(
+        self,
+        user_id: int,
+        payment_date: datetime | None,
+    ) -> list[tuple[str, int]]:
+        query = db_session.query(Operation.category, func.sum(Operation.amount))
         query = query.group_by(Operation.category)
-        return query.filter(Operation.user_id == user_id).scalar()
+        query = query.filter(Operation.user_id == user_id)
+        if payment_date:
+            query = query.filter(Operation.payment_date > payment_date)
+        categories = query.all()
+        return [(category[0], category[1]) for category in categories]
 
     def add(
         self,
