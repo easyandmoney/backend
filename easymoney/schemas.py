@@ -5,11 +5,10 @@ from pydantic import BaseModel
 
 class Operation(BaseModel):
     uid: int
-    name: str
     amount: int
     payment_date: datetime
     type_income_expenses: str
-    category: str | None
+    category: str
 
     class Config:
         orm_mode = True

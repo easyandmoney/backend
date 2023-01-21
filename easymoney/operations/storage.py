@@ -27,6 +27,13 @@ class OperationsStorage:
         operation = db_session.query(func.sum(Operation.amount))
         return operation.filter(Operation.user_id == user_id).scalar()
 
+    def get_by_category(self, user_id: int, category: str) -> int:
+        query = db_session.query(
+            Operation.category, func.sum(Operation.amount),
+        )
+        query = query.group_by(Operation.category)
+        return query.filter(Operation.user_id == user_id).scalar()
+
     def add(
         self,
         category: str,
@@ -36,7 +43,7 @@ class OperationsStorage:
         payment_date: datetime,
     ) -> Operation:
         new_operation = Operation(
-            name=category,
+            category=category,
             amount=amount,
             user_id=user_id,
             type_income_expenses=type_income_expenses,

@@ -28,11 +28,11 @@ def add(user_id: int):
     operation = Operation(**payload)
 
     new_operation = storage.add(
-        category=operation.name,
         amount=operation.amount,
         user_id=user_id,
         type_income_expenses=operation.type_income_expenses,
         payment_date=operation.payment_date,
+        category=operation.category,
     )
 
     operation = Operation.from_orm(new_operation)
@@ -70,7 +70,7 @@ def get_today_operations(user_id: int):
 def get_sum(user_id: int):
     total = storage.get_operations_sum(user_id=user_id)
     return {'total': total}
-
+    
 
 @user_operations_view.get('/month')
 def get_month_operations(user_id: int):
@@ -86,6 +86,7 @@ def get_year_operations(user_id: int):
 
     entities = storage.get_by_date(user_id=user_id, payment_date=payment_date)
     return orjson.dumps([Operation.from_orm(operation).dict() for operation in entities])
+
 
 
 @user_operations_view.put('/<int:uid>')
@@ -104,7 +105,7 @@ def update(user_id: int, uid: int):
     update_operation = storage.update(
         user_id=user_id,
         uid=uid,
-        category=operation.name,
+        category=operation.category,
         amount=operation.amount,
         type_income_expenses=operation.type_income_expenses,
         payment_date=operation.payment_date,
