@@ -52,6 +52,12 @@ def get_by_uid(user_id: int, uid: int):
     return operation.dict()
 
 
+@user_operations_view.delete('/last')
+def delete_last_operation(user_id: int):
+    storage.delete_last_operation(user_id=user_id)
+    return {}, 404
+
+
 @user_operations_view.get('/today')
 def get_today_operations(user_id: int):
     payment_date = datetime.today() - timedelta(hours=24)
@@ -64,12 +70,23 @@ def get_today_operations(user_id: int):
 def get_sum(user_id: int):
     total = storage.get_operations_sum(user_id=user_id)
     return {'total': total}
+    
+
+@user_operations_view.get('/month')
+def get_month_operations(user_id: int):
+    payment_date = datetime.today() - timedelta(days=30)
+
+    entities = storage.get_by_date(user_id=user_id, payment_date=payment_date)
+    return orjson.dumps([Operation.from_orm(operation).dict() for operation in entities])
 
 
-@user_operations_view.get('/<category>')
-def get_by_cat(user_id: int, category: str):
-    totalcat = storage.get_by_category(user_id=user_id, category=category)
-    return {'category': totalcat}
+@user_operations_view.get('/year')
+def get_year_operations(user_id: int):
+    payment_date = datetime.today() - timedelta(days=365)
+
+    entities = storage.get_by_date(user_id=user_id, payment_date=payment_date)
+    return orjson.dumps([Operation.from_orm(operation).dict() for operation in entities])
+
 
 
 @user_operations_view.put('/<int:uid>')
