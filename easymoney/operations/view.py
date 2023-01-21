@@ -28,7 +28,6 @@ def add(user_id: int):
     operation = Operation(**payload)
 
     new_operation = storage.add(
-        name=operation.name,
         amount=operation.amount,
         user_id=user_id,
         type_income_expenses=operation.type_income_expenses,
@@ -89,7 +88,7 @@ def update(user_id: int, uid: int):
     update_operation = storage.update(
         user_id=user_id,
         uid=uid,
-        category=operation.name,
+        category=operation.category,
         amount=operation.amount,
         type_income_expenses=operation.type_income_expenses,
         payment_date=operation.payment_date,

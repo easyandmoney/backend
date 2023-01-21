@@ -36,7 +36,6 @@ class OperationsStorage:
 
     def add(
         self,
-        name: str,
         category: str,
         amount: int,
         user_id: int,
@@ -44,7 +43,6 @@ class OperationsStorage:
         payment_date: datetime,
     ) -> Operation:
         new_operation = Operation(
-            name=name,
             category=category,
             amount=amount,
             user_id=user_id,

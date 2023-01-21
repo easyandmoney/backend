@@ -8,7 +8,6 @@ from easymoney.db import Base, engine
 class Operation(Base):
     __tablename__ = 'operations'
     uid = Column(Integer, primary_key=True)
-    name = Column(String)
     amount = Column(Integer)
     type_income_expenses = Column(String)
     payment_date = Column(DateTime(timezone=True), default=func.now())
