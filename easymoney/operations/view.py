@@ -59,7 +59,7 @@ def get_by_uid(user_id: int, uid: int):
 @user_operations_view.delete('/last')
 def delete_last_operation(user_id: int):
     storage.delete_last_operation(user_id=user_id)
-    return {}, 404
+    return {}, 204
 
 
 @user_operations_view.get('/today')
@@ -115,4 +115,4 @@ def update(user_id: int, uid: int):
 @user_operations_view.delete('/<int:uid>')
 def delete(user_id: int, uid: int):
     storage.delete(user_id=user_id, uid=uid)
-    return {}, 404
+    return {}, 204
