@@ -11,6 +11,7 @@ flask = "^2.2.2"
 sqlalchemy = "^1.4.45"
 pydantic = "^1.10.2"
 orjson = "^3.8.5"
+psycopg2-binary = "^2.9.5"
 
 
 [tool.poetry.group.dev.dependencies]
